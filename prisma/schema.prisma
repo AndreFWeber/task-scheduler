@@ -1,0 +1,46 @@
+// schema.prisma
+
+datasource db {
+  provider = "postgresql" // or your preferred database provider
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Account {
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  name          String
+  schedules     Schedule[]
+  tasks         Task[]
+  assignedSchedules Schedule[] @relation("agent")
+}
+
+model Schedule {
+  id         String   @id @default(uuid())
+  account_id Int
+  agent_id   Int
+  start_time DateTime
+  end_time   DateTime
+  account    Account   @relation(fields: [account_id], references: [id])
+  agent      Account?  @relation("agent", fields: [agent_id], references: [id])
+  tasks      Task[]
+}
+
+model Task {
+  id           String   @id @default(uuid())
+  account_id   Int
+  schedule_id  String
+  start_time   DateTime
+  duration     Int
+  type         Type
+  account      Account  @relation(fields: [account_id], references: [id])
+  schedule     Schedule @relation(fields: [schedule_id], references: [id])
+}
+
+enum Type {
+  break
+  work
+}
