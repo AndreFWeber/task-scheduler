@@ -35,12 +35,12 @@ model Task {
   schedule_id  String
   start_time   DateTime
   duration     Int
-  type         Type
+  type         TaskType
   account      Account  @relation(fields: [account_id], references: [id])
   schedule     Schedule @relation(fields: [schedule_id], references: [id])
 }
 
-enum Type {
+enum TaskType {
   break
   work
 }
