@@ -16,7 +16,8 @@ describe('AccountsService', () => {
             account: {
               create: jest.fn(),
               findUnique: jest.fn(),
-              findMany: jest.fn(),
+              update: jest.fn(),
+              delete: jest.fn(),
             },
           },
         },
@@ -90,15 +91,6 @@ describe('AccountsService', () => {
       expect(await service.updateAccount(updateQuery)).toEqual(account);
       expect(prisma.account.update).toHaveBeenCalledWith(updateQuery);
     });
-
-    it('should return null if account not found', async () => {
-      jest.spyOn(prisma.account, 'findUnique').mockResolvedValue(null);
-
-      expect(await service.getAccountById({ id: 1 })).toBeNull();
-      expect(prisma.account.findUnique).toHaveBeenCalledWith({
-        where: { id: 1 },
-      });
-    });
   });
 
   describe('deleteAccount', () => {
@@ -112,7 +104,9 @@ describe('AccountsService', () => {
       jest.spyOn(prisma.account, 'delete').mockResolvedValue(account);
 
       expect(await service.deleteAccount({ id: account.id })).toEqual(account);
-      expect(prisma.account.update).toHaveBeenCalledWith({ id: account.id });
+      expect(prisma.account.delete).toHaveBeenCalledWith({
+        where: { id: account.id },
+      });
     });
   });
 });

@@ -7,25 +7,25 @@ export class AccountsController {
   constructor(private readonly accountService: AccountsService) {}
 
   @Get(':id')
-  async getUserById(@Param('id') id: string) {
+  async getAccountById(@Param('id') id: string) {
     return this.accountService.getAccountById({ id: +id });
   }
 
   @Post()
-  async createAccount(@Body() userData: { email: string; name: string }) {
-    return this.accountService.createAccount(userData);
+  async createAccount(@Body() accountData: { email: string; name: string }) {
+    return this.accountService.createAccount(accountData);
   }
 
   @Put()
-  async updateAccount(@Body() userData: { id: string; name: string }) {
+  async updateAccount(@Body() accountData: { id: string; name: string }) {
     return this.accountService.updateAccount({
-      where: { id: +userData.id },
-      data: { name: userData.name },
+      where: { id: +accountData.id },
+      data: { name: accountData.name },
     });
   }
 
   @Delete(':id')
-  async deleteUserById(@Param('id') id: string) {
+  async deleteAccountById(@Param('id') id: string) {
     return this.accountService.deleteAccount({ id: +id });
   }
 }

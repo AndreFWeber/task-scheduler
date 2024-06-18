@@ -35,6 +35,16 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
         });
         break;
       }
+      case 'P2003': {
+        const status = HttpStatus.BAD_REQUEST;
+        response.status(status).json({
+          statusCode: status,
+          message:
+            exception.meta.cause ||
+            'Bad request - Make sure that all dependent resources exist',
+        });
+        break;
+      }
       default:
         // default 500 error code
         super.catch(exception, host);
