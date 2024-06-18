@@ -38,3 +38,8 @@ $ npx serverless deploy
 $ npm run test
 
 ```
+
+## Docs
+
+Swagger was not generated but the postman collections is available on /docs
+
