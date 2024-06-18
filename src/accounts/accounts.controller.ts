@@ -8,7 +8,7 @@ export class AccountsController {
 
   @Get(':id')
   async getUserById(@Param('id') id: string) {
-    return this.accountService.account({ id: +id });
+    return this.accountService.getAccountById({ id: +id });
   }
 
   @Post()
@@ -16,13 +16,10 @@ export class AccountsController {
     return this.accountService.createAccount(userData);
   }
 
-  @Put(':id')
-  async updateAccount(
-    @Param('id') id: string,
-    @Body() userData: { name: string },
-  ) {
+  @Put()
+  async updateAccount(@Body() userData: { id: string; name: string }) {
     return this.accountService.updateAccount({
-      where: { id: +id },
+      where: { id: +userData.id },
       data: { name: userData.name },
     });
   }
