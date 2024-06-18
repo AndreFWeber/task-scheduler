@@ -1,43 +1,27 @@
-import { Body, Controller } from '@nestjs/common';
+import { Body, Controller, UsePipes, ValidationPipe } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { Get, Param, Post, Put, Delete } from '@nestjs/common';
-import { TaskType } from '@prisma/client';
+import { CreateTaskDto, DeleteByIdDto, GetByIdDto, UpdateTaskDto } from './dto';
 
 @Controller('task')
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   @Get(':id')
-  async getTaskById(@Param('id') id: string) {
-    return this.taskService.getTaskById({ id });
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async getTaskById(@Param() params: GetByIdDto) {
+    return this.taskService.getTaskById({ id: params.id });
   }
 
   @Post()
-  async createTask(
-    @Body()
-    taskData: {
-      account_id: number;
-      schedule_id: string;
-      start_time: string;
-      duration: number;
-      type: TaskType;
-    },
-  ) {
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async createTask(@Body() taskData: CreateTaskDto) {
     return this.taskService.createTask(taskData);
   }
 
   @Put()
-  async updateTask(
-    @Body()
-    taskData: {
-      id: string;
-      start_time: string;
-      account_id: number;
-      duration: number;
-      schedule_id: string;
-      type: TaskType;
-    },
-  ) {
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async updateTask(@Body() taskData: UpdateTaskDto) {
     return this.taskService.updateTask({
       where: { id: taskData.id },
       data: taskData,
@@ -45,7 +29,8 @@ export class TaskController {
   }
 
   @Delete(':id')
-  async deleteUserById(@Param('id') id: string) {
-    return this.taskService.deleteTask({ id });
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async deleteUserById(@Param() params: DeleteByIdDto) {
+    return this.taskService.deleteTask({ id: params.id });
   }
 }

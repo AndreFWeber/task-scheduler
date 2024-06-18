@@ -1,40 +1,32 @@
-import { Body, Controller } from '@nestjs/common';
+import { Body, Controller, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ScheduleService } from './schedule.service';
 import { Get, Param, Post, Put, Delete } from '@nestjs/common';
+import {
+  DeleteByIdDto,
+  GetByIdDto,
+  CreateScheduleDto,
+  UpdateScheduleDto,
+} from './dto';
 
 @Controller('schedule')
 export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
 
   @Get(':id')
-  async getScheduleById(@Param('id') id: string) {
-    return this.scheduleService.getScheduleById({ id });
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async getScheduleById(@Param() params: GetByIdDto) {
+    return this.scheduleService.getScheduleById({ id: params.id });
   }
 
   @Post()
-  async createSchedule(
-    @Body()
-    scheduleData: {
-      start_time: string;
-      end_time: string;
-      account_id: number;
-      agent_id: number;
-    },
-  ) {
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async createSchedule(@Body() scheduleData: CreateScheduleDto) {
     return this.scheduleService.createSchedule(scheduleData);
   }
 
   @Put()
-  async updateSchedule(
-    @Body()
-    scheduleData: {
-      id: string;
-      start_time: string;
-      end_time: string;
-      account_id: number;
-      agent_id: number;
-    },
-  ) {
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async updateSchedule(@Body() scheduleData: UpdateScheduleDto) {
     return this.scheduleService.updateSchedule({
       where: { id: scheduleData.id },
       data: scheduleData,
@@ -42,7 +34,8 @@ export class ScheduleController {
   }
 
   @Delete(':id')
-  async deleteUserById(@Param('id') id: string) {
-    return this.scheduleService.deleteSchedule({ id });
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async deleteUserById(@Param() params: DeleteByIdDto) {
+    return this.scheduleService.deleteSchedule({ id: params.id });
   }
 }
